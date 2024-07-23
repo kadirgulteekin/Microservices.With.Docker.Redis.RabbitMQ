@@ -9,13 +9,13 @@ namespace Shared.Dtos
 {
     public class ResponseDto<T>
     {
-        public T? Data { get; set; }
+        public T Data { get; set; }
         [JsonIgnore]
         public int StatusCode { get; private set; }
         [JsonIgnore]
         public bool IsSuccessful { get; private set; }
-        public List<string>? Errors { get; set; }
-        public static ResponseDto<T> Success(T? data, int statusCode)
+        public List<string> Errors { get; set; }
+        public static ResponseDto<T> Success(T data, int statusCode)
         {
             return new ResponseDto<T> { Data = data, StatusCode = statusCode };
         }
