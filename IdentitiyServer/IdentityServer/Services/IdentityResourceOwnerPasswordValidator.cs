@@ -11,6 +11,11 @@ namespace IdentityServer.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
+        public IdentityResourceOwnerPasswordValidator(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
+
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             var IsExist = await _userManager.FindByEmailAsync(context.UserName);
