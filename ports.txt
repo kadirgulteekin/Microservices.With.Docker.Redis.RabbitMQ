@@ -1,1 +1,7 @@
  Services.CatalogAPI => "applicationUrl": "http://localhost:5011",
+
+ IdentityServer =>  "applicationUrl": "http://localhost:5001",
+
+ Services.PhotoStockAPI =>  "applicationUrl": "http://localhost:5012",
+
+  Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
