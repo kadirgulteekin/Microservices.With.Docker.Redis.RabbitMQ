@@ -31,5 +31,19 @@ namespace Services.PhotoStock.Controllers
 
             return CreateActionResultInstance(ResponseDto<PhotoDto>.Failed("photo is empty",400));
         }
+
+        public async Task<IActionResult> PhotoDelete(string photoUrl)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos", photoUrl);
+
+            if (!System.IO.File.Exists(path))
+            {
+                return CreateActionResultInstance(ResponseDto<NoContent>.Failed("photo not found", 404));
+            }
+
+            await Task.Run(() => System.IO.File.Delete(path));
+
+            return CreateActionResultInstance(ResponseDto<NoContent>.Success(204));
+        }
     }
 }
