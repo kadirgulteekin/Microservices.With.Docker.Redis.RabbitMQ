@@ -1,4 +1,6 @@
-﻿using Services.Catalog.Services;
+﻿
+using Services.Catalog.Services;
+using Shared.Services;
 
 namespace Services.Catalog.Configuration
 {
@@ -8,6 +10,7 @@ namespace Services.Catalog.Configuration
         {
             serviceDescriptors.AddScoped<ICategoryService,CategoryService>();
             serviceDescriptors.AddScoped<ICourseService,CourseService>();
+           
         }
     }
 }
