@@ -4,4 +4,6 @@
 
  Services.PhotoStockAPI =>  "applicationUrl": "http://localhost:5012",
 
-  Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
+ Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
+    
+ Services.DiscountAPI =>  "applicationUrl": "http://localhost:5014",
