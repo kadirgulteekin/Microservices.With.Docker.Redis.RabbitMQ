@@ -53,7 +53,7 @@ namespace Services.Discount.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             return CreateActionResultInstance(await _discountService.Delete(id));

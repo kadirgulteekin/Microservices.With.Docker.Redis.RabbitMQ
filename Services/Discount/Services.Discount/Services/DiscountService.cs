@@ -39,7 +39,7 @@ namespace Services.Discount.Services
             var isExistingDiscount = (await _dbConnection.QueryAsync<Models.Discount>("Select * from discount where userid = @UserId and code = @Code" , new {UserId= userId,Code = code})).FirstOrDefault();
 
             return isExistingDiscount == null ? ResponseDto<Models.Discount>.Failed("Discount not found", 404) :
-                ResponseDto<Models.Discount>.Success(200);
+                ResponseDto<Models.Discount>.Success(isExistingDiscount,200);
             
         }
 
