@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.Order.Domain.Core
 {
-    public class IAggregateRoot
+    public interface IAggregateRoot
     {
 
     }
