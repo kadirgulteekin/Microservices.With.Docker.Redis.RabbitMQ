@@ -24,7 +24,7 @@ namespace Services.Order.Application.Handlers
 
         public async Task<ResponseDto<List<OrderDto>>> Handle(GetOrdersByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _orderDbContext.Orders.Include(x=>x.OrderItems).Where(x=>x.BuyerId == request.UserId).ToListAsync();
+            var orders = await _orderDbContext.Orders.Include(x=>x.OrderItems).Where(x=>x.BuyerId == request.UserId).ToListAsync(cancellationToken);
 
             if (!orders.Any())
             {
