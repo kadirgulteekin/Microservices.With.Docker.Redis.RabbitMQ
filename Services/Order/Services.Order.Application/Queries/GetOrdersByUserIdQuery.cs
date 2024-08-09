@@ -15,4 +15,6 @@ namespace Services.Order.Application.Queries
         public string? UserId { get; set; }
 
     }
+
+   
 }
