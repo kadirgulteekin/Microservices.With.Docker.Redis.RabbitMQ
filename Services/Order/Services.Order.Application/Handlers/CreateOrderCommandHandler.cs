@@ -30,7 +30,7 @@ namespace Services.Order.Application.Handlers
             var newAddress = new Address(request.AddressDto?.Province,request.AddressDto?.District,request.AddressDto?.Street,request.AddressDto?.ZipCode,request.AddressDto?.Line);
 
             Domain.OrderAggregate.Order newOrder = new Domain.OrderAggregate.Order(newAddress,request.BuyerId);
-
+        
             request.OrderItemDtos?.ForEach(x =>
             {
                 newOrder.AddOrderItem(x.ProductId, x.ProductName, x.Price, x.PictureUrl);
