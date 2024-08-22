@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Order.Application.Command;
+using Services.Order.Application.Dtos;
 using Services.Order.Application.Queries;
 using Shared.ControllerBases;
+using Shared.Dtos;
 using Shared.Services;
 
 namespace Services.Order.API.Controllers
@@ -34,7 +36,7 @@ namespace Services.Order.API.Controllers
         {
             var response = await _mediator.Send(createOrderCommand);
 
-            return CreateActionResultInstance(response);
+            return CreateActionResultInstance(ResponseDto<CreatedOrderDto>.Success(response.Data, 200));
         }
     
     }
