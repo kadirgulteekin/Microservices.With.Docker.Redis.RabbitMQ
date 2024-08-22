@@ -15,7 +15,7 @@ namespace Shared.ControllerBases
             return new ObjectResult(response)
             {
                 StatusCode = response.StatusCode,
-                Value = response.Data
+                Value = response.Errors
                 
             };
         }

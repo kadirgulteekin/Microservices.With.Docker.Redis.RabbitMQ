@@ -13,6 +13,6 @@ namespace Services.Order.Application.Command
     {
         public string? BuyerId { get; set; }
         public List<OrderItemDto>?  OrderItemDtos { get; set; }
-        public AddressDto? Address{ get; set; }
+        public AddressDto? AddressDto { get; set; }
     }
 }

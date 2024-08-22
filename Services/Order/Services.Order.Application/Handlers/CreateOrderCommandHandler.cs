@@ -16,18 +16,18 @@ namespace Services.Order.Application.Handlers
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ResponseDto<CreatedOrderDto>>
     {
         private readonly OrderDbContext _orderDbContext;
-       
+        private readonly Mapper _mapper;
 
-        public CreateOrderCommandHandler(OrderDbContext orderDbContext)
+        public CreateOrderCommandHandler(OrderDbContext orderDbContext,Mapper mapper)
         {
             _orderDbContext = orderDbContext;
-           
+            _mapper = mapper;
         }
 
         public async Task<ResponseDto<CreatedOrderDto>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             //var newAddress = _mapper.Map<Address>(request.AddressDto);
-            var newAddress = new Address(request.Address?.Province,request.Address?.District,request.Address?.Street, request.Address?.ZipCode, request.Address?.Line);
+            var newAddress = new Address(request.AddressDto?.Province,request.AddressDto?.District,request.AddressDto?.Street,request.AddressDto?.ZipCode,request.AddressDto?.Line);
 
             Domain.OrderAggregate.Order newOrder = new Domain.OrderAggregate.Order(newAddress,request.BuyerId);
         
