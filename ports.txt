@@ -5,3 +5,5 @@
  Services.PhotoStockAPI =>  "applicationUrl": "http://localhost:5012",
 
   Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
+
+  Gateaway =>  "applicationUrl": "http://localhost:5000",
