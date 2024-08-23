@@ -4,6 +4,12 @@
 
  Services.PhotoStockAPI =>  "applicationUrl": "http://localhost:5012",
 
-  Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
+ Services.BasketAPI =>  "applicationUrl": "http://localhost:5013",
 
-  Gateaway =>  "applicationUrl": "http://localhost:5000",
+ Services.DiscountAPI =>  "applicationUrl": "http://localhost:5014",
+
+ Services.OrderAPI =>  "applicationUrl": "http://localhost:5015",
+
+ Services.Payment =>  "applicationUrl": "http://localhost:5016",
+
+ Gateaway =>  "applicationUrl": "http://localhost:5000",
