@@ -13,3 +13,5 @@
  Services.Payment =>  "applicationUrl": "http://localhost:5016",
 
  Gateaway =>  "applicationUrl": "http://localhost:5000",
+
+ Web => "applicationUrl": "http://localhost:5010",
