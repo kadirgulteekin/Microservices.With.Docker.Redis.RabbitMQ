@@ -2,14 +2,15 @@ using Web.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection("ServiceApiSettings"));
+
+builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection("ServiceApiSettings"));
 
-builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
