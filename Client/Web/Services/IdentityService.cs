@@ -15,11 +15,11 @@ namespace Web.Services
     public class IdentityService : IIdentityService
     {
         private readonly HttpClient _httpClient;
-        private readonly HttpContextAccessor _httpContextAccessor; //for cookie
+        private readonly IHttpContextAccessor _httpContextAccessor; //for cookie
         private readonly ClientSettings _clientSettings;
         private readonly ServiceApiSettings _serviceApiSettings;
 
-        public IdentityService(HttpClient httpClient, HttpContextAccessor httpContextAccessor,IOptions<ClientSettings> clientSettings,IOptions<ServiceApiSettings> serviceApiSettings)
+        public IdentityService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<ClientSettings> clientSettings, IOptions<ServiceApiSettings> serviceApiSettings)
         {
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
@@ -42,7 +42,7 @@ namespace Web.Services
             var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
             {
                 Address = _serviceApiSettings.BaseUri,
-                Policy = new DiscoveryPolicy { RequireHttps = false}
+                Policy = new DiscoveryPolicy { RequireHttps = false }
             });
 
             if (disco.IsError)
@@ -65,12 +65,14 @@ namespace Web.Services
             {
                 var responseContent = await token.HttpResponse!.Content.ReadAsStringAsync();
 
-                var errorDto = JsonSerializer.Deserialize<ErrorDto>(responseContent, new JsonSerializerOptions
+                ErrorDto? errorDto;
+
+                errorDto = JsonSerializer.Deserialize<ErrorDto>(responseContent, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-                return ResponseDto<bool>.Failed(errorDto!.Error, 400);
+                return ResponseDto<bool>.Failed(errorDto!.Errors, 400);
             }
 
             var userInfoRequest = new UserInfoRequest();
@@ -80,10 +82,10 @@ namespace Web.Services
             var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
             if (userInfo.IsError)
             {
-                throw userInfo.Exception ?? throw new Exception("userInfo.Exception");
+                throw userInfo.Exception != null ? userInfo.Exception : new  InvalidOperationException("Failed to retrieve user information.");
             }
 
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(userInfo.Claims,CookieAuthenticationDefaults.AuthenticationScheme,"name","role");
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(userInfo.Claims, CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
 
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 

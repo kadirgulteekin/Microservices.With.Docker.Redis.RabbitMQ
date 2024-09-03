@@ -6,6 +6,6 @@ namespace Shared.Dtos
 {
     public class ErrorDto
     {
-        public List<string> Error { get; set; } = new List<string>();
+        public List<string> Errors { get; set; }
     }
 }
