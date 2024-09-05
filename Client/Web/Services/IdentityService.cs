@@ -27,14 +27,71 @@ namespace Web.Services
             _serviceApiSettings = serviceApiSettings.Value;
         }
 
-        public Task<TokenResponse> GetAccessTokenByRefreshToken()
+        public async Task<TokenResponse> GetAccessTokenByRefreshToken()
         {
-            throw new NotImplementedException();
+            var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _serviceApiSettings.BaseUri,
+                Policy = new DiscoveryPolicy { RequireHttps = false }
+            });
+
+            if (disco.IsError)
+            {
+                throw disco.Exception ?? throw new Exception("Exception alınamadı");
+            }
+
+            var refreshToken = await _httpContextAccessor.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+            RefreshTokenRequest refreshTokenRequest = new()
+            {
+                ClientId = _clientSettings?.WebClientForUser?.ClientId!,
+                ClientSecret = _clientSettings?.WebClientForUser?.ClientSecret!,
+                RefreshToken = refreshToken != null ? refreshToken : throw new Exception("refresh token couldnt get"),
+                Address = disco.TokenEndpoint
+            };
+
+            var token = await _httpClient.RequestRefreshTokenAsync(refreshTokenRequest);
+
+            if (token.IsError)
+            {
+                throw new InvalidOperationException("Token Error!");
+            };
+
+
+
+            var authenticationToken = new List<AuthenticationToken>()
+            {
+                new AuthenticationToken
+                {
+                    Name =  OpenIdConnectParameterNames.AccessToken,Value = token.AccessToken!
+                },
+                new AuthenticationToken
+                {
+                    Name =  OpenIdConnectParameterNames.AccessToken,Value = token.RefreshToken!
+                },
+                new AuthenticationToken
+                {
+                    Name =  OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture)
+                }
+            };
+
+            var authenticationResult = await _httpContextAccessor?.HttpContext?.AuthenticateAsync()!;
+
+            var properties = authenticationResult.Properties;
+
+            properties!.StoreTokens(authenticationToken);
+
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, authenticationResult?.Principal!, properties);
+
+
+            return token;
+
         }
 
-        public Task RevokeRefreshToken()
+        public async Task RevokeRefreshToken()
         {
-            throw new NotImplementedException();
+
+
         }
 
         public async Task<ResponseDto<bool>> SignIn(SignInInput signInInput)
@@ -82,7 +139,7 @@ namespace Web.Services
             var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
             if (userInfo.IsError)
             {
-                throw userInfo.Exception != null ? userInfo.Exception : new  InvalidOperationException("Failed to retrieve user information.");
+                throw userInfo.Exception != null ? userInfo.Exception : new InvalidOperationException("Failed to retrieve user information.");
             }
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(userInfo.Claims, CookieAuthenticationDefaults.AuthenticationScheme, "name", "role");
