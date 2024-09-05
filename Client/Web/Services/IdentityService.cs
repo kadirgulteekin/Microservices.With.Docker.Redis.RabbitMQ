@@ -90,7 +90,30 @@ namespace Web.Services
 
         public async Task RevokeRefreshToken()
         {
+            var disco = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            {
+                Address = _serviceApiSettings.BaseUri,
+                Policy = new DiscoveryPolicy { RequireHttps = false }
+            });
 
+            if (disco.IsError)
+            {
+                throw disco.Exception ?? throw new Exception("Exception alınamadı");
+            }
+
+            var refreshToken = await _httpContextAccessor!.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+            TokenRevocationRequest tokenRevocationRequest = new()
+            {
+                ClientId = _clientSettings.WebClientForUser?.ClientId!,
+                ClientSecret = _clientSettings.WebClientForUser?.ClientSecret,
+                Address = disco.RegistrationEndpoint,
+                Token = refreshToken!,
+                TokenTypeHint = "refreshToken"
+
+            };
+
+            await _httpClient.RevokeTokenAsync(tokenRevocationRequest);
 
         }
 
