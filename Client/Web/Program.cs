@@ -16,12 +16,14 @@ builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection(
 builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
 
 
+
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
     opt =>
     {
         opt.LoginPath = "/Auth/SignIn";
-        opt.ExpireTimeSpan = TimeSpan.FromDays(60);
+        opt.ExpireTimeSpan = TimeSpan.FromDays(1);
         opt.SlidingExpiration = true;
         opt.Cookie.Name = "SignInCookieForUser";
     });
