@@ -7,12 +7,13 @@ using Web.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpContextAccessor();
+
 //builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-
+builder.Services.AddScoped<ResourceOwnerTokenPasswordHandler>();    
 builder.Services.AddHttpClient<IIdentityService, IdentityService>();
 builder.Services.Configure<ServiceApiSettings>(builder.Configuration.GetSection("ServiceApiSettings"));
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<ClientSettings>(builder.Configuration.GetSection("ClientSettings"));
 
@@ -31,7 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     opt =>
     {
         opt.LoginPath = "/Auth/SignIn";
-        opt.ExpireTimeSpan = TimeSpan.FromDays(1);
+        opt.ExpireTimeSpan = TimeSpan.FromDays(60);
         opt.SlidingExpiration = true;
         opt.Cookie.Name = "SignInCookieForUser";
     });

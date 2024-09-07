@@ -37,7 +37,7 @@ namespace Web.Services
 
             if (disco.IsError)
             {
-                throw disco.Exception ?? throw new Exception("Exception alınamadı");
+                throw disco.Exception ?? throw new System.Exception("Exception alınamadı");
             }
 
             var refreshToken = await _httpContextAccessor.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
@@ -46,7 +46,7 @@ namespace Web.Services
             {
                 ClientId = _clientSettings?.WebClientForUser?.ClientId!,
                 ClientSecret = _clientSettings?.WebClientForUser?.ClientSecret!,
-                RefreshToken = refreshToken != null ? refreshToken : throw new Exception("refresh token couldnt get"),
+                RefreshToken = refreshToken != null ? refreshToken : throw new System.Exception("refresh token couldnt get"),
                 Address = disco.TokenEndpoint
             };
 
@@ -98,7 +98,7 @@ namespace Web.Services
 
             if (disco.IsError)
             {
-                throw disco.Exception ?? throw new Exception("Exception alınamadı");
+                throw disco.Exception ?? throw new System.Exception("Exception alınamadı");
             }
 
             var refreshToken = await _httpContextAccessor!.HttpContext!.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
@@ -127,14 +127,14 @@ namespace Web.Services
 
             if (disco.IsError)
             {
-                throw disco.Exception ?? throw new Exception("Exception alınamadı");
+                throw disco.Exception ?? throw new System.Exception("Exception alınamadı");
             }
 
             var passwordTokenRequest = new PasswordTokenRequest
             {
                 ClientId = _clientSettings?.WebClientForUser?.ClientId ?? "defaultClientId",
                 ClientSecret = _clientSettings?.WebClientForUser?.ClientSecret,
-                UserName = signInInput.Email ?? throw new Exception("Email is cannot be found"),
+                UserName = signInInput.Email ?? throw new System.Exception("Email is cannot be found"),
                 Password = signInInput.Password,
                 Address = disco.TokenEndpoint
             };
