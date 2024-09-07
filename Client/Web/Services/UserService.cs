@@ -12,10 +12,10 @@ namespace Web.Services
         }
 
         public async Task<UserViewModel> GetUser()
+        
         {
-            var user = await _httpClient.GetFromJsonAsync<UserViewModel>("/api/user/getuser");
-
-            return user!;
+            return await _httpClient.GetFromJsonAsync<UserViewModel>("/api/user/getuser");
+            
         }
     }
 }
