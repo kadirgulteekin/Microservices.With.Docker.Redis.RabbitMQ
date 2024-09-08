@@ -26,21 +26,26 @@ namespace Web.Handler
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
             var response = await base.SendAsync(request, cancellationToken);
-            
-            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            try
             {
-                var tokenResponse = await _identityService.GetAccessTokenByRefreshToken();
-
-                if (tokenResponse != null)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+                    var tokenResponse = await _identityService.GetAccessTokenByRefreshToken();
 
-                    response = await base.SendAsync(request, cancellationToken);
+                    if (tokenResponse != null)
+                    {
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+
+                        response = await base.SendAsync(request, cancellationToken);
+                    }
                 }
-            }else
-            {
-                throw new UnAuthorizeException();
             }
+            catch (System.Exception e)
+            {
+
+                throw new System.Exception(e.Message);
+            }
+           
 
             return response;
 
