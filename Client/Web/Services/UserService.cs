@@ -11,8 +11,7 @@ namespace Web.Services
             _httpClient = httpClient;
         }
 
-        public async Task<UserViewModel> GetUser()
-        
+        public async Task<UserViewModel> GetUser()  
         {
             return await _httpClient.GetFromJsonAsync<UserViewModel>("/api/user/getuser");
             

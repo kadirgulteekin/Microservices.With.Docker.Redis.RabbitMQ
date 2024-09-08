@@ -12,7 +12,7 @@ using Web.Services.Interfaces;
 
 namespace Web.Services
 {
-    public class IdentityService : IIdentityService
+    public class IdentityService : IIdentityService 
     {
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor; //for cookie
@@ -46,7 +46,7 @@ namespace Web.Services
             {
                 ClientId = _clientSettings?.WebClientForUser?.ClientId!,
                 ClientSecret = _clientSettings?.WebClientForUser?.ClientSecret!,
-                RefreshToken = refreshToken != null ? refreshToken : throw new System.Exception("refresh token couldnt get"),
+                RefreshToken = refreshToken != null ? refreshToken : throw new System.Exception("refresh token couldnt get") ,
                 Address = disco.TokenEndpoint
             };
 
@@ -95,7 +95,7 @@ namespace Web.Services
                 Address = _serviceApiSettings.IdentityBaseUri,
                 Policy = new DiscoveryPolicy { RequireHttps = false }
             });
-
+             
             if (disco.IsError)
             {
                 throw disco.Exception ?? throw new System.Exception("Exception alınamadı");
@@ -155,9 +155,11 @@ namespace Web.Services
                 return ResponseDto<bool>.Failed(errorDto!.Errors, 400);
             }
 
-            var userInfoRequest = new UserInfoRequest();
-            userInfoRequest.Token = token.AccessToken;
-            userInfoRequest.Address = disco.UserInfoEndpoint;
+            var userInfoRequest = new UserInfoRequest
+            {
+                Token = token.AccessToken,
+                Address = disco.UserInfoEndpoint
+            };
 
             var userInfo = await _httpClient.GetUserInfoAsync(userInfoRequest);
             if (userInfo.IsError)
@@ -179,11 +181,11 @@ namespace Web.Services
                 },
                 new AuthenticationToken
                 {
-                    Name =  OpenIdConnectParameterNames.AccessToken,Value = token.RefreshToken!
+                    Name =  OpenIdConnectParameterNames.RefreshToken,Value = token.RefreshToken!
                 },
                 new AuthenticationToken
                 {
-                    Name =  OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("O",CultureInfo.InvariantCulture)
+                    Name =  OpenIdConnectParameterNames.ExpiresIn,Value = DateTime.Now.AddSeconds(token.ExpiresIn).ToString("o",CultureInfo.InvariantCulture)
                 }
             });
 
